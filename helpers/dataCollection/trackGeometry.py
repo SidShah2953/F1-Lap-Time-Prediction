@@ -5,8 +5,7 @@ from scipy.spatial.distance import euclidean
 class TrackGeometryAnalyzer:
     def __init__(self,
                  year,
-                 grand_prix,
-                 driver="1"):
+                 grand_prix):
         """
         Initialize track geometry analysis for a specific race
         
@@ -52,7 +51,7 @@ class TrackGeometryAnalyzer:
                 'max_elevation': z_data.max(),
                 'min_elevation': z_data.min(),
                 'total_elevation_change': z_data.max() - z_data.min(),
-                'elevation_variance': z_data.std()
+                'elevation_sd': z_data.std()
             }
         
         # Calculate track curvature
@@ -66,7 +65,7 @@ class TrackGeometryAnalyzer:
             return {
                 'total_curvature': np.sum(np.abs(angle_changes)),
                 'max_curvature': np.max(np.abs(angle_changes)),
-                'curvature_variance': np.std(angle_changes)
+                'curvature_sd': np.std(angle_changes)
             }
         
         # Return comprehensive track geometry
