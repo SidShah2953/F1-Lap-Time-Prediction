@@ -31,7 +31,7 @@ class RaceTelemetry():
                     
                     'LapStartTime': lap.LapStartTime,
                     # Lap Performance Data
-                    'LapTimeSeconds': lap.LapTime.total_seconds() if lap.LapTime else np.nan,
+                    'LapTime': lap.LapTime.total_seconds() if lap.LapTime else np.nan,
                     'LapNumber': lap.LapNumber,
                     
                     # Tire Information

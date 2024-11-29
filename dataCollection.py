@@ -2,6 +2,9 @@ import pandas as pd
 from helpers.dataCollection.raceCalendar import RaceCalendar
 from helpers.dataCollection.trackGeometry import TrackGeometryAnalyzer
 from helpers.dataCollection.trackWeather import TrackWeatherAnalyzer
+from helpers.dataCollection.raceTelemetry import RaceTelemetry
+from helpers.dataCollection.driverMetrics import DriverMetrics
+
 
 years = [2023]
 
@@ -9,6 +12,9 @@ years = [2023]
 def main():
     store_race_calendar()
     store_track_geometry()
+    store_track_weather()
+    store_driver_metrics()
+    store_race_telemetry()
 
 
 def store_race_calendar():
@@ -94,6 +100,74 @@ def store_track_weather():
         index=False
     )
 
+    return track_data
+
+
+def store_driver_metrics():
+    races = pd.read_excel('Data/Race Calendar.xlsx')
+    races = races[['year', 'round', 'location']]
+    driver_data = None
+    for i in range(len(races)):
+    # for i in range(1):
+        year = races.iloc[i]['year']
+        location = races.iloc[i]['location']
+
+        DM = DriverMetrics(
+                    year=year,
+                    grand_prix=location
+                    )
+        
+        metrics = {
+                    **races.iloc[i],
+                    **DM.get_driver_metrics()
+                }
+        metrics = pd.DataFrame(metrics)
+        
+        if driver_data is None:
+            driver_data = metrics
+        else:
+            driver_data = pd.concat([driver_data, metrics])
+    
+    driver_data.to_excel(
+        'Data/Driver Metrics.xlsx',
+        index=False
+    )
+    
+    return driver_data
+
+
+def store_race_telemetry():
+    races = pd.read_excel('Data/Race Calendar.xlsx')
+    races = races[['year', 'round', 'location']]
+    track_data = None
+    # for i in range(len(races)):
+    for i in range(1):
+        year = races.iloc[i]['year']
+        location = races.iloc[i]['location']
+
+        RC = RaceTelemetry(
+                    year=year,
+                    grand_prix=location
+                    )
+        
+        telemetry = {
+                    **races.iloc[i],
+                    **RC.get_race_telemetry()
+                }
+        telemetry = pd.DataFrame(telemetry)
+        if track_data is None:
+            track_data = telemetry
+        else:
+            track_data = pd.concat([track_data, telemetry])
+    
+    track_data = track_data[track_data['TrackStatus'] == '1']
+    track_data.dropna()
+
+    track_data.to_excel(
+        'Data/Race Telemetry.xlsx',
+        index=False
+    )
+    
     return track_data
 
 

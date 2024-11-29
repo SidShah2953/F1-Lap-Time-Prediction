@@ -24,7 +24,8 @@ class DriverMetrics():
             
             # Get the driver's fastest qualifying lap
             fastest_lap = self.session.laps.pick_drivers(driver).pick_fastest()
-            
+            if isinstance(fastest_lap.LapTime, float):
+                continue
             # Extract lap details
             lap_data = {
                 # Driver Information
@@ -51,3 +52,7 @@ class DriverMetrics():
         df_sorted = df.sort_values('BestLapTime')
         
         return df_sorted
+
+
+    def get_driver_metrics(self):
+        return self.get_fastest_qualifying()
