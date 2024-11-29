@@ -1,5 +1,7 @@
 import fastf1
 
+# Enable Caching
+fastf1.Cache.enable_cache('Cache/')
 
 class RaceCalendar():
     def __init__(self, year:int):

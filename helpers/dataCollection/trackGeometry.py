@@ -2,13 +2,14 @@ import numpy as np
 import fastf1
 from scipy.spatial.distance import euclidean
 
+# Enable Caching
+fastf1.Cache.enable_cache('Cache/')
+
 class TrackGeometryAnalyzer:
     def __init__(self,
                  year,
                  grand_prix):
         """
-        Initialize track geometry analysis for a specific race
-        
         Parameters:
         - year: Racing season year
         - grand_prix: Name of the Grand Prix event
@@ -63,7 +64,7 @@ class TrackGeometryAnalyzer:
             angle_changes = np.diff(angles)
             
             return {
-                'total_curvature': np.sum(np.abs(angle_changes)),
+                'total_curvature': np.sum(np.abs(angle_changes)) / self.session.total_laps,
                 'max_curvature': np.max(np.abs(angle_changes)),
                 'curvature_sd': np.std(angle_changes)
             }

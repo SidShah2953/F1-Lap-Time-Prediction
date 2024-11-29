@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 
 
+# Enable Caching
+fastf1.Cache.enable_cache('Cache/')
+
 class RaceTelemetry():
     def __init__(self, year:int, grand_prix):
         self.year = year

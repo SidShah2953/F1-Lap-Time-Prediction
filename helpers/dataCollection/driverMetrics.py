@@ -2,6 +2,8 @@ import fastf1
 import pandas as pd
 import numpy as np
 
+# Enable Caching
+fastf1.Cache.enable_cache('Cache/')
 
 class DriverMetrics():
     def __init__(self, year:int, grand_prix):

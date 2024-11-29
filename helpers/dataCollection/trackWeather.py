@@ -1,13 +1,14 @@
 import fastf1
 import pandas as pd
 
+# Enable Caching
+fastf1.Cache.enable_cache('Cache/')
+
 class TrackWeatherAnalyzer:
     def __init__(self,
                  year,
                  grand_prix):
         """
-        Initialize track geometry analysis for a specific race
-        
         Parameters:
         - year: Racing season year
         - grand_prix: Name of the Grand Prix event
@@ -17,7 +18,6 @@ class TrackWeatherAnalyzer:
 
 
     def set_race_weather(self):        
-        # print(self.session.weather_data)
         # Extract weather data directly
         weather_data = {
             'air_temperature': self.session.weather_data['AirTemp'],
