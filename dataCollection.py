@@ -1,6 +1,7 @@
 import pandas as pd
 from helpers.dataCollection.raceCalendar import RaceCalendar
 from helpers.dataCollection.trackGeometry import TrackGeometryAnalyzer
+from helpers.dataCollection.trackWeather import TrackWeatherAnalyzer
 
 years = [2023]
 
@@ -28,6 +29,8 @@ def store_race_calendar():
                 'Data/Race Calendar.xlsx', 
                 index=False
             )
+    
+    return all_races
 
 
 def store_track_geometry():
@@ -57,6 +60,42 @@ def store_track_geometry():
         'Data/Track Geoemtry.xlsx',
         index=False
     )
+    
+    return track_data
+
+
+def store_track_weather():
+    races = pd.read_excel('Data/Race Calendar.xlsx')
+    races = races[['year', 'round', 'location']]
+    track_data = None
+    for i in range(len(races)):
+    # for i in range(1):
+        year = races.iloc[i]['year']
+        location = races.iloc[i]['location']
+
+        TWA = TrackWeatherAnalyzer(
+                    year=year,
+                    grand_prix=location
+                    )
+        
+        weather = {
+                    **races.iloc[i],
+                    **TWA.engineer_weather_features()
+                }
+        weather = pd.DataFrame(weather)
+        
+        if track_data is None:
+            track_data = weather
+        else:
+            track_data = pd.concat([track_data, weather])
+    
+    track_data.to_excel(
+        'Data/Track Weather.xlsx',
+        index=False
+    )
+
+    return track_data
+
 
 if __name__ == "__main__":
     main()

@@ -17,44 +17,32 @@ class TrackWeatherAnalyzer:
         self.session.load()
 
 
-    def set_race_weather(self):        
-        # Extract weather data directly
-        weather_data = {
-            'air_temperature': self.session.weather_data['AirTemp'],
-            'track_temperature': self.session.weather_data['TrackTemp'],
-            'humidity': self.session.weather_data['Humidity'],
-            'wind_speed': self.session.weather_data['WindSpeed'],
-            'wind_direction': self.session.weather_data['WindDirection']
-        }
-        self.weather_data = weather_data
-
-
     def engineer_weather_features(self):
         """
         Create advanced weather features for machine learning
         """
-        self.set_race_weather()
-        weather_data = self.weather_data
-        # print(weather_data)
-
         features = pd.DataFrame({
+            'Time': self.session.weather_data['Time'],
+            
             # Temperature-related features
-            'air_temperature': weather_data['air_temperature'],
-            'track_temperature': weather_data['track_temperature'],
+            'AirTemp': self.session.weather_data['AirTemp'],
+            'TrackTemp': self.session.weather_data['TrackTemp'],
+            'Rain': self.session.weather_data['Rainfall'],
 
             # Humidity and wind complexity
-            'humidity_wind_interaction': \
-                weather_data['humidity'] * weather_data['wind_speed'],
-            'wind_chill_factor': \
+            'HumidityWindInteraction': \
+                self.session.weather_data['Humidity'] \
+                    * self.session.weather_data['WindSpeed'],
+            'WindChillFactor': \
                 self.calculate_wind_chill(
-                            weather_data['air_temperature'], 
-                            weather_data['wind_speed']
+                            self.session.weather_data['AirTemp'], 
+                            self.session.weather_data['WindSpeed']
                         ),
             
             # Track surface condition indicators
-            'surface_grip_index': self.calculate_surface_grip(
-                weather_data['track_temperature'], 
-                weather_data['humidity']
+            'SurfaceGripIndex': self.calculate_surface_grip(
+                self.session.weather_data['TrackTemp'], 
+                self.session.weather_data['Humidity']
             )
         })
         return features

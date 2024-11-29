@@ -49,10 +49,10 @@ class TrackGeometryAnalyzer:
         def calculate_elevation_profile(telemetry):
             z_data = telemetry['Z']
             return {
-                'max_elevation': z_data.max(),
-                'min_elevation': z_data.min(),
-                'total_elevation_change': z_data.max() - z_data.min(),
-                'elevation_sd': z_data.std()
+                'MaxElevation': z_data.max(),
+                'MinElevation': z_data.min(),
+                'TotalElevationChange': z_data.max() - z_data.min(),
+                'ElevationSD': z_data.std()
             }
         
         # Calculate track curvature
@@ -64,15 +64,15 @@ class TrackGeometryAnalyzer:
             angle_changes = np.diff(angles)
             
             return {
-                'total_curvature': np.sum(np.abs(angle_changes)) / self.session.total_laps,
-                'max_curvature': np.max(np.abs(angle_changes)),
-                'curvature_sd': np.std(angle_changes)
+                'TotalCurvature': np.sum(np.abs(angle_changes)) / self.session.total_laps,
+                'MaxCurvature': np.max(np.abs(angle_changes)),
+                'CurvatureSD': np.std(angle_changes)
             }
         
         # Return comprehensive track geometry
         return {
-            'track_length': calculate_track_length(telemetry),
-            'total_laps': self.session.total_laps,
+            'TrackLength': calculate_track_length(telemetry),
+            'TotalLaps': self.session.total_laps,
             **calculate_elevation_profile(telemetry),
             **calculate_track_curvature(telemetry)
         }

@@ -29,6 +29,7 @@ class RaceTelemetry():
                     # Driver Information
                     'Driver': driver,
                     
+                    'LapStartTime': lap.LapStartTime,
                     # Lap Performance Data
                     'LapTimeSeconds': lap.LapTime.total_seconds() if lap.LapTime else np.nan,
                     'LapNumber': lap.LapNumber,
