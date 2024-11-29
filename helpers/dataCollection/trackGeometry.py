@@ -71,6 +71,7 @@ class TrackGeometryAnalyzer:
         # Return comprehensive track geometry
         return {
             'track_length': calculate_track_length(telemetry),
+            'total_laps': self.session.total_laps,
             **calculate_elevation_profile(telemetry),
             **calculate_track_curvature(telemetry)
         }
