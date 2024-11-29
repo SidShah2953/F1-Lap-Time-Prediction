@@ -1,5 +1,5 @@
 import fastf1
-import pandas as pd
+
 
 class RaceCalendar():
     def __init__(self, year:int):
