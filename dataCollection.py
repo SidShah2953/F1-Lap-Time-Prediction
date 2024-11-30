@@ -32,7 +32,7 @@ def store_race_calendar():
             del rc
     
     all_races.to_excel(
-                'Data/Race Calendar.xlsx', 
+                'Data/Raw Data/Race Calendar.xlsx', 
                 index=False
             )
     
@@ -40,7 +40,7 @@ def store_race_calendar():
 
 
 def store_track_geometry():
-    races = pd.read_excel('Data/Race Calendar.xlsx')
+    races = pd.read_excel('Data/Raw Data/Race Calendar.xlsx')
     races = races[['year', 'round', 'location']]
     track_data = None
     for i in range(len(races)):
@@ -63,7 +63,7 @@ def store_track_geometry():
             track_data = pd.concat([track_data, geometry])
     
     track_data.to_excel(
-        'Data/Track Geoemtry.xlsx',
+        'Data/Raw Data/Track Geometry.xlsx',
         index=False
     )
     
@@ -71,11 +71,10 @@ def store_track_geometry():
 
 
 def store_track_weather():
-    races = pd.read_excel('Data/Race Calendar.xlsx')
+    races = pd.read_excel('Data/Raw Data/Race Calendar.xlsx')
     races = races[['year', 'round', 'location']]
     track_data = None
     for i in range(len(races)):
-    # for i in range(1):
         year = races.iloc[i]['year']
         location = races.iloc[i]['location']
 
@@ -96,7 +95,7 @@ def store_track_weather():
             track_data = pd.concat([track_data, weather])
     
     track_data.to_excel(
-        'Data/Track Weather.xlsx',
+        'Data/Raw Data/Track Weather.xlsx',
         index=False
     )
 
@@ -104,11 +103,10 @@ def store_track_weather():
 
 
 def store_driver_metrics():
-    races = pd.read_excel('Data/Race Calendar.xlsx')
+    races = pd.read_excel('Data/Raw Data/Race Calendar.xlsx')
     races = races[['year', 'round', 'location']]
     driver_data = None
     for i in range(len(races)):
-    # for i in range(1):
         year = races.iloc[i]['year']
         location = races.iloc[i]['location']
 
@@ -129,7 +127,7 @@ def store_driver_metrics():
             driver_data = pd.concat([driver_data, metrics])
     
     driver_data.to_excel(
-        'Data/Driver Metrics.xlsx',
+        'Data/Raw Data/Driver Metrics.xlsx',
         index=False
     )
     
@@ -137,11 +135,10 @@ def store_driver_metrics():
 
 
 def store_race_telemetry():
-    races = pd.read_excel('Data/Race Calendar.xlsx')
+    races = pd.read_excel('Data/Raw Data/Race Calendar.xlsx')
     races = races[['year', 'round', 'location']]
     track_data = None
-    # for i in range(len(races)):
-    for i in range(1):
+    for i in range(len(races)):
         year = races.iloc[i]['year']
         location = races.iloc[i]['location']
 
@@ -160,11 +157,10 @@ def store_race_telemetry():
         else:
             track_data = pd.concat([track_data, telemetry])
     
-    track_data = track_data[track_data['TrackStatus'] == '1']
     track_data.dropna()
 
     track_data.to_excel(
-        'Data/Race Telemetry.xlsx',
+        'Data/Raw Data/Race Telemetry.xlsx',
         index=False
     )
     

@@ -17,6 +17,7 @@ class TrackGeometryAnalyzer:
         self.session = fastf1.get_session(year, grand_prix, 'Race')
         self.session.load()
         self.driver = self.session.drivers[0]
+        self.circuit_info = self.session.get_circuit_info()
     
     
     def calculate_track_geometry(self):
@@ -64,6 +65,7 @@ class TrackGeometryAnalyzer:
             angle_changes = np.diff(angles)
             
             return {
+                'NumberOfCorners': len(self.circuit_info.corners),
                 'TotalCurvature': np.sum(np.abs(angle_changes)) / self.session.total_laps,
                 'MaxCurvature': np.max(np.abs(angle_changes)),
                 'CurvatureSD': np.std(angle_changes)
