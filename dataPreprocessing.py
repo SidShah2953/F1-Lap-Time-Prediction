@@ -10,6 +10,7 @@ def main():
     clean_track_geom_data()
     clean_track_weath_data()
     clean_race_telemetry()
+    clean_driver_metrics()
 
 
 def clean_track_geom_data(file_name="Track Geometry.xlsx"):
@@ -50,6 +51,22 @@ def clean_race_telemetry(file_name="Race Telemetry.xlsx"):
 
     lap_info = lap_info.drop(['Sector1Time', 'Sector2Time', 'Sector3Time'], axis=1)
     lap_info = lap_info.drop('IsPersonalBest', axis=1)
+    
+    lap_info.to_excel(
+            output_path + file_name,
+            index=False
+        )
+
+    return lap_info
+
+
+def clean_driver_metrics(file_name="Driver Metrics.xlsx"):
+    lap_info = pd.read_excel(input_path + file_name)
+    lap_info = lap_info.drop('location', axis=1)
+
+    lap_info = lap_info.drop(['BestLapTime', 'QualifyingPosition'], axis=1)
+    lap_info = lap_info.drop(['QualiSector1Time', 'QualiSector2Time', 'QualiSector3Time'], axis=1)
+    
     
     lap_info.to_excel(
             output_path + file_name,

@@ -120,6 +120,7 @@ def store_driver_metrics():
                     **DM.get_driver_metrics()
                 }
         metrics = pd.DataFrame(metrics)
+        metrics['BestLapTimeDelta'] = metrics['BestLapTime'] - metrics['BestLapTime'].min()
         
         if driver_data is None:
             driver_data = metrics
