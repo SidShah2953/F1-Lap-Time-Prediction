@@ -12,6 +12,47 @@ class DriverMetrics():
         self.session = fastf1.get_session(year, grand_prix, 'Q')
         self.session.load()
 
+    def get_scores_before(self):
+        # Fetch the event schedule to confirm the year's events
+        schedule = pd.read_excel('Data/Raw Data/Race Calendar.xlsx')
+        events = schedule[(schedule['location'] == self.grand_prix)\
+                            & (schedule['year'] == self.year)].index[0]
+
+        events = schedule[:events][['year', 'location']]
+        if len(events) == 0:
+            event = schedule.iloc[0][['year', 'location']]
+            session = fastf1.get_session(event.year, event.location, 'Race')
+            session.load()
+
+            points = pd.DataFrame({
+                'DriverNumber': session.drivers,
+                'PointsAtStart': [0] * len(session.results)
+            })
+        else:
+            points = None
+            for event in events.itertuples():
+                session = fastf1.get_session(event.year, event.location, 'Race')
+                session.load()
+                
+                # Get race results
+                results = session.results[['DriverNumber', 'Points']]
+                if points is None:
+                    points = results.reset_index().drop('index', axis=1)
+                else:
+                    points = pd.concat([points, results])
+                points = points.reset_index().drop('index', axis=1)
+
+            points = points.groupby('DriverNumber')\
+                        .agg(['sum'])\
+                        .reset_index()
+
+            points = pd.DataFrame({
+                'DriverNumber': points[('DriverNumber','')],
+                'PointsAtStart': points[('Points', 'sum')]
+            })
+            
+        return points
+    
 
     def get_fastest_qualifying(self):        
         # Prepare to store best laps
@@ -49,10 +90,22 @@ class DriverMetrics():
         df = pd.DataFrame(best_laps)
         
         # Sort by best lap time
-        df_sorted = df.sort_values('BestLapTime')
+        df = df.reset_index()\
+                .drop('index', axis=1)
         
-        return df_sorted
+        return df
 
 
     def get_driver_metrics(self):
-        return self.get_fastest_qualifying()
+        quali = self.get_fastest_qualifying()
+        quali['DriverNumber'] = quali['DriverNumber'].astype(int)
+        quali = quali.set_index('DriverNumber')
+
+        points = self.get_scores_before()
+        points['DriverNumber'] = points['DriverNumber'].astype(int)
+        points = points.set_index('DriverNumber')
+
+        df = quali.join(points, how='inner', rsuffix='_r')
+        df = df.reset_index()
+        
+        return df

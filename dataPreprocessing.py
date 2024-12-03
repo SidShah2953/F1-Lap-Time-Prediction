@@ -7,13 +7,13 @@ output_path = 'Data/Cleaned Data/'
 
 
 def main():
-    clean_track_geom_data()
-    clean_track_weath_data()
-    clean_race_telemetry()
-    clean_driver_metrics()
+    preprocess_track_geom_data()
+    preprocess_track_weath_data()
+    preprocess_race_telemetry()
+    preprocess_driver_metrics()
 
 
-def clean_track_geom_data(file_name="Track Geometry.xlsx"):
+def preprocess_track_geom_data(file_name="Track Geometry.xlsx"):
     track_info = pd.read_excel(input_path + file_name)
     track_info = track_info.drop('MaxElevation', axis=1)
     track_info = track_info.drop('location', axis=1)
@@ -26,7 +26,7 @@ def clean_track_geom_data(file_name="Track Geometry.xlsx"):
     return track_info
 
 
-def clean_track_weath_data(file_name="Track Weather.xlsx"):
+def preprocess_track_weath_data(file_name="Track Weather.xlsx"):
     weather_info = pd.read_excel(input_path + file_name)
     weather_info = quantize_time(weather_info, time_col='Time')
     weather_info = weather_info.drop('location', axis=1)
@@ -40,7 +40,7 @@ def clean_track_weath_data(file_name="Track Weather.xlsx"):
     return weather_info
 
 
-def clean_race_telemetry(file_name="Race Telemetry.xlsx"):
+def preprocess_race_telemetry(file_name="Race Telemetry.xlsx"):
     lap_info = pd.read_excel(input_path + file_name)
     lap_info = lap_info[lap_info['TrackStatus'] == 1]
     lap_info = lap_info[lap_info['Deleted'] == False]
@@ -60,7 +60,7 @@ def clean_race_telemetry(file_name="Race Telemetry.xlsx"):
     return lap_info
 
 
-def clean_driver_metrics(file_name="Driver Metrics.xlsx"):
+def preprocess_driver_metrics(file_name="Driver Metrics.xlsx"):
     lap_info = pd.read_excel(input_path + file_name)
     lap_info = lap_info.drop('location', axis=1)
 
