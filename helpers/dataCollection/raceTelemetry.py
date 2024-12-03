@@ -27,7 +27,7 @@ class RaceTelemetry():
                 # Gather detailed information for each lap
                 lap_data = {
                     # Driver Information
-                    'Driver': driver,
+                    'DriverNumber': driver,
                     
                     'LapStartTime': lap.LapStartTime,
                     # Lap Performance Data
